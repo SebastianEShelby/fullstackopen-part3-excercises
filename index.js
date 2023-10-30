@@ -32,11 +32,11 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/info', (req, res) => {
   const personsCount = persons.length;
   const currentDate = new Date(Date.now());
-  const htmlContent = [
-    `<p>Phonebook has info for ${personsCount} people</p>`,
-    `<p>${currentDate}</p>`
-  ]
-  const htmlResponse = htmlContent.reduce((prev, curr) => prev.concat(curr), "")
+
+  const htmlResponse = `
+  <p>Phonebook has info for ${personsCount} people</p>
+  <p>${currentDate}</p>
+  `
 
   res.send(htmlResponse)
 })
