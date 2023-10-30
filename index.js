@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json())
 
 const persons = [
   {
@@ -26,6 +27,18 @@ const persons = [
 
 app.get('/api/persons', (req, res) => {
   res.json(persons);
+})
+
+app.get('/api/info', (req, res) => {
+  const personsCount = persons.length;
+  const currentDate = new Date(Date.now());
+  const htmlContent = [
+    `<p>Phonebook has info for ${personsCount} people</p>`,
+    `<p>${currentDate}</p>`
+  ]
+  const htmlResponse = htmlContent.reduce((prev, curr) => prev.concat(curr), "")
+
+  res.send(htmlResponse)
 })
 
 
