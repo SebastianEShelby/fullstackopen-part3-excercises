@@ -56,6 +56,42 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
+const generateId = () => {
+  let foundRandomId = false;
+  let randomId = 0;
+  const min = 1;
+  const max = 100;
+
+  if (persons.length >= max) throw new Error('could not generate a unique id for new person')
+
+  while (!foundRandomId) {
+    randomId = Math.floor(Math.random() * (max - min + 1) + min)
+    foundRandomId = !persons.find(person => Number(person.id) === randomId)
+    console.log('randomId', randomId);
+  }
+
+  return randomId;
+}
+
+app.post('/api/persons', (req, res) => {
+
+  const newId = generateId();
+
+  if (!newId) return res.status(400).json({
+    error: 'could not generate a unique id for new person'
+  })
+
+  const newPerson = {
+    ...req.body,
+    id: newId
+  }
+
+  persons = persons.concat(newPerson)
+
+  res.json(newPerson);
+
+})
+
 
 const PORT = 3001
 app.listen(PORT, () => {
