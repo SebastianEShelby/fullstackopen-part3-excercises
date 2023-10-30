@@ -67,19 +67,28 @@ const generateId = () => {
   while (!foundRandomId) {
     randomId = Math.floor(Math.random() * (max - min + 1) + min)
     foundRandomId = !persons.find(person => Number(person.id) === randomId)
-    console.log('randomId', randomId);
   }
 
   return randomId;
 }
 
+const sendErrorResponse = (res, statusCode, message) => {
+  return res.status(statusCode).json({
+    error: message
+  })
+}
+
+
 app.post('/api/persons', (req, res) => {
 
-  const newId = generateId();
+  if (!req.body.name) return sendErrorResponse(res, 400, 'name is missing');
+  if (!req.body.number) return sendErrorResponse(res, 400, 'number is missing');
 
-  if (!newId) return res.status(400).json({
-    error: 'could not generate a unique id for new person'
-  })
+  const isduplicateName = !!persons.find(person => person.name.toLocaleLowerCase().match(req.body.name.toLocaleLowerCase()))
+  if (isduplicateName) return sendErrorResponse(res, 400, 'name must be unique');
+
+  const newId = generateId();
+  if (!newId) return sendErrorResponse(res, 400, 'could not generate a unique id for new person')
 
   const newPerson = {
     ...req.body,
