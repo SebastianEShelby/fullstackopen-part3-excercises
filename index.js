@@ -47,7 +47,7 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/info', (req, res) => {
-
+  // get the number of person records from db
   Person.countDocuments()
     .then(peopleCount => {
       const currentDate = new Date(Date.now());
@@ -58,7 +58,6 @@ app.get('/api/info', (req, res) => {
     `
       res.send(htmlResponse)
     }).catch(error => next(error))
-
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
