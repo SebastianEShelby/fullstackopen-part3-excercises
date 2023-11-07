@@ -26,6 +26,9 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
 
+    if (!newName) return setErrorNotification(`name is missing!`);
+    if (!newNumber) return setErrorNotification(`number is missing!`);
+
     const newPersonObj = { name: newName, number: newNumber }
 
     if (isExistingPerson(newPersonObj.name)) {
