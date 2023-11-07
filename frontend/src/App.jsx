@@ -24,9 +24,9 @@ const App = () => {
   }, [])
 
   const addName = (event) => {
-    const newPersonObj = { name: newName, number: newNumber }
-
     event.preventDefault()
+
+    const newPersonObj = { name: newName, number: newNumber }
 
     if (isExistingPerson(newPersonObj.name)) {
       if (!window.confirm(`${newPersonObj.name} is already added to the phonebook, replace the old number with a new one?`)) return;
