@@ -64,22 +64,6 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
-const generateId = () => {
-  let foundRandomId = false;
-  let randomId = 0;
-  const min = 1;
-  const max = 100;
-
-  if (persons.length >= max) throw new Error('could not generate a unique id for new person')
-
-  while (!foundRandomId) {
-    randomId = Math.floor(Math.random() * (max - min + 1) + min)
-    foundRandomId = !persons.find(person => Number(person.id) === randomId)
-  }
-
-  return randomId;
-}
-
 const sendErrorResponse = (res, statusCode, message) => {
   return res.status(statusCode).json({
     error: message
@@ -92,21 +76,25 @@ app.post('/api/persons', (req, res) => {
   if (!req.body.name) return sendErrorResponse(res, 400, 'name is missing');
   if (!req.body.number) return sendErrorResponse(res, 400, 'number is missing');
 
-  const isduplicateName = !!persons.find(person => person.name.toLocaleLowerCase().match(req.body.name.toLocaleLowerCase()))
-  if (isduplicateName) return sendErrorResponse(res, 400, 'name must be unique');
+  const newPerson = new Person({
+    name: req.body.name,
+    number: req.body.number
+  });
 
-  const newId = generateId();
-  if (!newId) return sendErrorResponse(res, 400, 'could not generate a unique id for new person')
+  newPerson.save().then(person => {
+    res.json(person);
+  })
+})
 
-  const newPerson = {
-    ...req.body,
-    id: newId
-  }
+app.put('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
 
-  persons = persons.concat(newPerson)
+  if (!id) return sendErrorResponse(res, 400, 'person id is missing');
 
-  res.json(newPerson);
-
+  Person.findByIdAndUpdate(id, { number: req.body.number })
+    .then(person => {
+      res.json(person);
+    })
 })
 
 

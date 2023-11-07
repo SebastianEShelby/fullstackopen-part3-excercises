@@ -41,7 +41,7 @@ const App = () => {
           setPersons(persons.map(person => person.id !== response.data.id ? person : updatedExistingPerson));
           setFilteredPersons(filteredPersons.map(person => person.id !== response.data.id ? person : updatedExistingPerson))
           clearPersonForm();
-        }).catch(() => {
+        }).catch((err) => {
           updateStateForRemovedPerson(existingPerson.id, updatedExistingPerson.name)
         })
 
@@ -49,7 +49,7 @@ const App = () => {
       personService
         .create(newPersonObj)
         .then(response => {
-          setSuccessNotificaiton(`Updated ${newPersonObj.name}'s phone number to ${newPersonObj.number}`)
+          setSuccessNotificaiton(`Added ${newPersonObj.name} ${newPersonObj.number}`)
           setPersons(persons.concat(response.data));
           updateFilteredPersons(response.data)
           clearPersonForm();
