@@ -39,14 +39,14 @@ app.get('/api/persons/:id', (req, res, next) => {
     }).catch(error => next(error))
 })
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then(people => {
       res.json(people)
     }).catch(error => next(error))
 })
 
-app.get('/api/info', (req, res) => {
+app.get('/api/info', (req, res, next) => {
   // get the number of person records from db
   Person.countDocuments()
     .then(peopleCount => {
@@ -74,7 +74,7 @@ const sendErrorResponse = (res, statusCode, message) => {
 }
 
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
 
   if (!req.body.name) return sendErrorResponse(res, 400, 'name is missing');
   if (!req.body.number) return sendErrorResponse(res, 400, 'number is missing');
@@ -91,7 +91,7 @@ app.post('/api/persons', (req, res) => {
 })
 
 // update existing user's phone number
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
 
   if (!id) return sendErrorResponse(res, 400, 'person id is missing');
