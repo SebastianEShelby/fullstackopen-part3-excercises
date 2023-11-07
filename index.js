@@ -91,6 +91,7 @@ app.post('/api/persons', (req, res) => {
     }).catch(error => next(error))
 })
 
+// update existing user's phone number
 app.put('/api/persons/:id', (req, res) => {
   const id = req.params.id;
 
