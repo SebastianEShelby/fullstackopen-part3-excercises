@@ -45,7 +45,7 @@ const App = () => {
           setFilteredPersons(filteredPersons.map(person => person.id !== response.data.id ? person : updatedExistingPerson))
           clearPersonForm();
         }).catch((err) => {
-          updateStateForRemovedPerson(existingPerson.id, updatedExistingPerson.name)
+          setErrorNotification(err.response.data.error)
         })
 
     } else {
@@ -56,6 +56,8 @@ const App = () => {
           setPersons(persons.concat(response.data));
           updateFilteredPersons(response.data)
           clearPersonForm();
+        }).catch(err => {
+          setErrorNotification(err.response.data.error)
         })
     }
   }
@@ -99,13 +101,16 @@ const App = () => {
         setSuccessNotificaiton(`${name} was successfully removed`)
         setPersons(persons.filter(person => person.id !== id))
         setFilteredPersons(filteredPersons.filter(filteredPerson => filteredPerson.id !== id))
-      }).catch(error => {
-        updateStateForRemovedPerson(id, name)
+      }).catch(err => {
+        updateStateForRemovedPerson(id, name, err)
       })
   }
 
-  const updateStateForRemovedPerson = (id, name) => {
-    setErrorNotification(`${name} has already been removed from the server`);
+  const updateStateForRemovedPerson = (id, name, err) => {
+    console.log(err);
+    const errMsg = err.response.data.error ?? `${name} has already been removed from the server`
+    setErrorNotification(errMsg);
+    if (err.response.data.error) return;
     setPersons(persons.filter(person => person.id !== id))
     setFilteredPersons(filteredPersons.filter(filteredPerson => filteredPerson.id !== id))
   }
@@ -122,7 +127,7 @@ const App = () => {
     }, timeout);
   }
 
-  const setErrorNotification = (message, timeout = 5000) => {
+  const setErrorNotification = (message, timeout = 10000) => {
     setNotification(
       {
         message: message,

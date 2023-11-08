@@ -61,8 +61,9 @@ app.get('/api/info', (req, res, next) => {
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
-  Person.findByIdAndDelete(req.params.id)
+  Person.findByIdAndDelete(req.params.id, { strict: true })
     .then(result => {
+      if (!result) throw Error('already deleted')
       res.status(204).end()
     }).catch(err => next(err))
 })
@@ -93,10 +94,15 @@ app.post('/api/persons', (req, res, next) => {
 // update existing user's phone number
 app.put('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
-
   if (!id) return sendErrorResponse(res, 400, 'person id is missing');
 
-  Person.findByIdAndUpdate(id, { number: req.body.number })
+  const { name, number } = req.body
+
+  Person.findByIdAndUpdate(
+    id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then(person => {
       res.json(person);
     }).catch(error => next(error))
@@ -109,10 +115,13 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (err, req, res, next) => {
-  console.error(err.message)
+  console.error('err.name', err.name)
+  console.error('err.message', err.message)
 
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).json({ error: err.message })
   }
 
   next(err)
