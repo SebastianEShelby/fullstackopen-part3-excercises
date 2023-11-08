@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const phoneValidators = require('./phone-validtors')
 
 if (!process.env.MONGODB_URI) {
   console.log('Please set MongoDB URI in .env file')
@@ -26,7 +27,10 @@ const personSchema = new mongoose.Schema({
     minLength: 3,
     required: true
   },
-  number: String,
+  number: {
+    type: String,
+    validate: phoneValidators
+  },
 })
 
 personSchema.set('toJSON', {
