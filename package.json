@@ -10,7 +10,9 @@
     "build:ui": "rm -rf dist && cd ./frontend && npm run build && cp -r dist ../",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
-    "logs:prod": "fly logs"
+    "logs:prod": "fly logs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "author": "Sebastian Shelby",
   "license": "GPL-3.0-or-later",
