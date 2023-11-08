@@ -1,7 +1,7 @@
 const PHONE_VALIDATORS = [
   {
     validator: (v) => {
-      v.replace("-", "")
+      v.replace('-', '')
       return v.trim().length >= 8
     },
     message: props => `${props.value} must be at least 8 digits!`

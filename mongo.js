@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-require('dotenv').config();
+require('dotenv').config()
 
 if (!process.env.MONGO_USERNAME || !process.env.MONGO_PASSWORD) {
   console.log('set username and password in .env file')
@@ -17,7 +17,7 @@ const personSchema = new mongoose.Schema({
   number: String,
 })
 
-const Person = mongoose.model('Person', personSchema);
+const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length > 2) {
 
@@ -26,7 +26,7 @@ if (process.argv.length > 2) {
 
   if (!name || !number) {
     console.log('please pass a valid name and number in commandline arguments')
-    process.exit(2);
+    process.exit(2)
   }
 
   const person = new Person({
