@@ -115,8 +115,8 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (err, req, res, next) => {
-  console.error('err.name', err.name)
-  console.error('err.message', err.message)
+  console.error('errorHandler err.name', err.name)
+  console.error('errorHandler err.message', err.message)
 
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
